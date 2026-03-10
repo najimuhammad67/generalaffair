@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}WhatsApp Dashboard — GA System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-whatsapp me-2 text-success"></i>WhatsApp Dashboard
+    </h4>
+    <a href="{% url 'notifications:log_list' %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-list-ul me-1"></i>Lihat Semua Log
+    </a>
+</div>
+
+<!-- Connection Status -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center py-4">
+                {% if wa_service_down %}
+                <div class="display-4 text-danger mb-2"><i class="bi bi-exclamation-triangle"></i></div>
+                <h5 class="fw-bold text-danger">Service Offline</h5>
+                <p class="text-muted small mb-3">WA Service tidak dapat dihubungi. Pastikan <code>node index.js</code>
+                    sedang berjalan.</p>
+                <span class="badge bg-danger px-3 py-2">Offline</span>
+                {% elif wa_connected %}
+                <div class="display-4 text-success mb-2"><i class="bi bi-check-circle"></i></div>
+                <h5 class="fw-bold text-success">Terhubung</h5>
+                <p class="text-muted small mb-3">WhatsApp aktif dan siap mengirim pesan.</p>
+                <span class="badge bg-success px-3 py-2"><i class="bi bi-wifi me-1"></i>Connected</span>
+                {% elif wa_qr_pending %}
+                <div class="display-4 text-warning mb-2"><i class="bi bi-qr-code"></i></div>
+                <h5 class="fw-bold text-warning">Butuh Login</h5>
+                <p class="text-muted small mb-3">Scan QR code untuk menghubungkan WhatsApp.</p>
+                <a href="{{ wa_qr_url }}" target="_blank" class="btn btn-success">
+                    <i class="bi bi-qr-code-scan me-1"></i>Buka QR Code
+                </a>
+                {% else %}
+                <div class="display-4 text-secondary mb-2"><i class="bi bi-question-circle"></i></div>
+                <h5 class="fw-bold text-secondary">Menunggu...</h5>
+                <p class="text-muted small mb-3">Menunggu koneksi dari WA Service.</p>
+                <span class="badge bg-secondary px-3 py-2">Waiting</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="col-md-8">
+        <div class="row g-4">
+            <div class="col-sm-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <div class="display-6 fw-bold text-primary">{{ total_notifications }}</div>
+                        <p class="text-muted small mb-0">Total Notifikasi</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <div class="display-6 fw-bold text-success">{{ sent_notifications }}</div>
+                        <p class="text-muted small mb-0">Terkirim</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <div class="display-6 fw-bold text-danger">{{ failed_notifications }}</div>
+                        <p class="text-muted small mb-0">Gagal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Guide -->
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2"><i class="bi bi-info-circle me-1 text-primary"></i>Cara Pairing WhatsApp</h6>
+                <ol class="small text-muted mb-0">
+                    <li>Jalankan <code>cd wa-service && node index.js</code> di terminal</li>
+                    <li>Klik tombol <b>"Buka QR Code"</b> atau buka <code>http://localhost:3001/api/qr</code></li>
+                    <li>Buka WhatsApp di HP → <b>Linked Devices</b> → <b>Link a Device</b></li>
+                    <li>Scan QR code → tunggu sampai status berubah <span class="badge bg-success">Connected</span></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Logs -->
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+        <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-1"></i>10 Notifikasi Terakhir</h6>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Waktu</th>
+                    <th>Penerima</th>
+                    <th>Pesan</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in recent_logs %}
+                <tr>
+                    <td class="small text-muted text-nowrap">{{ log.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if log.recipient %}
+                        {{ log.recipient.get_full_name|default:log.recipient.username }}
+                        {% else %}
+                        <span class="text-muted fst-italic">Deleted User</span>
+                        {% endif %}
+                    </td>
+                    <td class="small" style="max-width:300px">
+                        <span class="d-inline-block text-truncate" style="max-width:300px" title="{{ log.message }}">
+                            {{ log.message }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if log.status == 'sent' %}
+                        <span class="badge bg-success"><i class="bi bi-check2 me-1"></i>Terkirim</span>
+                        {% else %}
+                        <span class="badge bg-danger"><i class="bi bi-x me-1"></i>Gagal</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Belum ada notifikasi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Auto refresh -->
+<script>
+    // Refresh status every 10 seconds
+    setTimeout(() => location.reload(), 10000);
+</script>
+{% endblock %}

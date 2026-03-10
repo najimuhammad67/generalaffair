@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}Kelola Karyawan — GA System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-people me-2 text-primary"></i>Kelola Karyawan
+    </h4>
+    <a href="{% url 'users:user_create' %}" class="btn btn-primary">
+        <i class="bi bi-person-plus me-1"></i>Tambah User
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body py-2">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold mb-1">Role</label>
+                <select name="role" class="form-select form-select-sm">
+                    <option value="">Semua Role</option>
+                    {% for value, label in role_choices %}
+                    <option value="{{ value }}" {% if value == current_role %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label small fw-semibold mb-1">Cari</label>
+                <input type="text" name="q" value="{{ current_q }}" class="form-control form-control-sm"
+                    placeholder="Cari nama, username, atau nomor HP...">
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="bi bi-search me-1"></i>Filter
+                </button>
+                <a href="{% url 'users:user_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- User Table -->
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Username</th>
+                    <th>Nama</th>
+                    <th>Role</th>
+                    <th>No. WhatsApp</th>
+                    <th>Status</th>
+                    <th class="text-end">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users_list %}
+                <tr>
+                    <td class="fw-semibold">{{ u.username }}</td>
+                    <td>{{ u.get_full_name|default:"-" }}</td>
+                    <td>
+                        <span
+                            class="badge {% if u.role == 'manager' %}bg-danger{% elif u.role == 'ga' %}bg-info text-dark{% else %}bg-secondary{% endif %}">
+                            {{ u.get_role_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if u.phone %}
+                        <i class="bi bi-whatsapp text-success me-1"></i>{{ u.phone }}
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                        <span class="badge bg-success">Aktif</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Nonaktif</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        {% if u != request.user %}
+                        <a href="{% url 'users:user_edit' u.pk %}" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'users:admin_reset_password' u.pk %}"
+                            class="btn btn-sm btn-outline-warning me-1">
+                            <i class="bi bi-key"></i>
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ u.pk }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ u.pk }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title"><i
+                                                class="bi bi-exclamation-triangle me-2"></i>Konfirmasi Hapus</h5>
+                                        <button type="button" class="btn-close btn-close-white"
+                                            data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body text-start">
+                                        <p>Apakah Anda yakin ingin menghapus user <strong>{{ u.username }}</strong> ({{
+                                            u.get_full_name|default:"-" }})?</p>
+                                        <p class="text-muted small mb-0">Semua data pengajuan milik user ini juga akan
+                                            ikut terhapus.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batal</button>
+                                        <form method="post" action="{% url 'users:user_delete' u.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-trash me-1"></i>Ya, Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <span class="badge bg-light text-muted">Anda</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Tidak ada data user ditemukan.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ page_obj.previous_page_number }}&role={{ current_role }}&q={{ current_q }}">&laquo;</a>
+        </li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}&role={{ current_role }}&q={{ current_q }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ page_obj.next_page_number }}&role={{ current_role }}&q={{ current_q }}">&raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

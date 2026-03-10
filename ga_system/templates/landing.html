@@ -1,0 +1,554 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="GA System — Enterprise General Affair Management System. Streamline your operations with our forward-thinking platform.">
+    <title>GA System — Modern Enterprise Management</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <!-- Landing CSS -->
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+
+<body class="landing-body">
+
+    <!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
+    <nav class="lp-nav" id="navbar">
+        <div class="container-lp nav-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚡</span>
+                GA System
+            </a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#services">Services</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="#blog">Blog</a>
+                <a href="#faq">FAQ</a>
+            </div>
+
+            <div class="nav-cta">
+                <a href="{% url 'users:login' %}" class="btn-secondary-lp">Log In</a>
+                <a href="#cta" class="btn-primary-lp">Get Started</a>
+            </div>
+
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════ HERO ═══════════════════════ -->
+    <section class="hero" id="hero">
+        <div class="container-lp">
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <span class="badge-dot"></span>
+                    #1 Enterprise Management Platform
+                </div>
+                <h1 class="hero-title reveal reveal-delay-1">
+                    Stay ahead of the curve<br>
+                    with our <span class="highlight">forward-thinking</span> platform
+                </h1>
+                <p class="hero-desc reveal reveal-delay-2">
+                    Streamline general affairs, service requests, and team collaboration
+                    — all in one unified, intelligent platform built for modern enterprises.
+                </p>
+                <div class="hero-buttons reveal reveal-delay-3">
+                    <a href="#cta" class="btn-primary-lp">
+                        Get Started Free
+                        <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+                    </a>
+                    <a href="#portfolio" class="btn-secondary-lp">
+                        <i data-lucide="play-circle" style="width:18px;height:18px;"></i>
+                        View Demo
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual reveal reveal-delay-2">
+                <div class="hero-img-wrapper">
+                    <img src="{% static 'images/hero-dashboard.png' %}" alt="GA System Dashboard" loading="eager">
+                </div>
+                <!-- Floating stat card 1 -->
+                <div class="hero-float-card card-1">
+                    <div class="stat-number">230+</div>
+                    <div class="stat-label">Active Companies</div>
+                    <div class="stat-bar"><span style="width:78%"></span></div>
+                </div>
+                <!-- Floating stat card 2 -->
+                <div class="hero-float-card card-2">
+                    <div class="stat-number">920+</div>
+                    <div class="stat-label">Requests Managed</div>
+                    <div class="stat-bar"><span style="width:92%"></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ SOCIAL PROOF ═══════════════════════ -->
+    <section class="social-proof reveal">
+        <div class="container-lp">
+            <span class="social-proof-text">Trusted by leading enterprises</span>
+            <div class="social-logos">
+                <div class="logo-item"><i data-lucide="building-2" style="width:20px;height:20px;"></i> TechCorp</div>
+                <div class="logo-item"><i data-lucide="zap" style="width:20px;height:20px;"></i> InnovateLab</div>
+                <div class="logo-item"><i data-lucide="globe" style="width:20px;height:20px;"></i> GlobalNet</div>
+                <div class="logo-item"><i data-lucide="shield" style="width:20px;height:20px;"></i> SecurePro</div>
+                <div class="logo-item"><i data-lucide="cpu" style="width:20px;height:20px;"></i> NexaDigital</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ COUNTERS ═══════════════════════ -->
+    <section class="counter-section">
+        <div class="container-lp">
+            <div class="counter-grid">
+                <div class="counter-item reveal">
+                    <div class="counter-number"><span data-count="230" data-suffix="+">0</span></div>
+                    <div class="counter-label">Enterprise Clients</div>
+                </div>
+                <div class="counter-item reveal reveal-delay-1">
+                    <div class="counter-number"><span data-count="15" data-suffix="K+">0</span></div>
+                    <div class="counter-label">Requests Processed</div>
+                </div>
+                <div class="counter-item reveal reveal-delay-2">
+                    <div class="counter-number"><span data-count="99" data-suffix="%">0</span></div>
+                    <div class="counter-label">Uptime SLA</div>
+                </div>
+                <div class="counter-item reveal reveal-delay-3">
+                    <div class="counter-number"><span data-count="24" data-suffix="/7">0</span></div>
+                    <div class="counter-label">Support Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ SERVICES ═══════════════════════ -->
+    <section class="services" id="services">
+        <div class="container-lp">
+            <div class="section-header reveal">
+                <h2 class="section-title">Everything you need to<br>manage your operations</h2>
+                <p class="section-subtitle">Our platform provides comprehensive tools built for enterprise-grade general
+                    affair management.</p>
+            </div>
+
+            <div class="services-grid">
+                <!-- Card 1 -->
+                <div class="service-card reveal">
+                    <div class="service-icon"><i data-lucide="clipboard-list" style="width:28px;height:28px;"></i></div>
+                    <h3>Service Requests</h3>
+                    <p>Submit, track, and manage service requests with real-time status updates and priority workflows.
+                    </p>
+                    <a href="#" class="card-link">Learn more <i data-lucide="arrow-right"
+                            style="width:16px;height:16px;"></i></a>
+                </div>
+                <!-- Card 2 -->
+                <div class="service-card reveal reveal-delay-1">
+                    <div class="service-icon"><i data-lucide="bar-chart-3" style="width:28px;height:28px;"></i></div>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Powerful data visualization and reporting tools to gain insights on service performance and
+                        trends.</p>
+                    <a href="#" class="card-link">Learn more <i data-lucide="arrow-right"
+                            style="width:16px;height:16px;"></i></a>
+                </div>
+                <!-- Card 3 -->
+                <div class="service-card reveal reveal-delay-2">
+                    <div class="service-icon"><i data-lucide="message-circle" style="width:28px;height:28px;"></i></div>
+                    <h3>WhatsApp Integration</h3>
+                    <p>Broadcast messages and send notifications directly via WhatsApp with dynamic templates.</p>
+                    <a href="#" class="card-link">Learn more <i data-lucide="arrow-right"
+                            style="width:16px;height:16px;"></i></a>
+                </div>
+                <!-- Card 4 -->
+                <div class="service-card reveal">
+                    <div class="service-icon"><i data-lucide="users" style="width:28px;height:28px;"></i></div>
+                    <h3>Role-Based Access</h3>
+                    <p>Granular role management for employees, GA staff, and managers with custom permission levels.</p>
+                    <a href="#" class="card-link">Learn more <i data-lucide="arrow-right"
+                            style="width:16px;height:16px;"></i></a>
+                </div>
+                <!-- Card 5 -->
+                <div class="service-card reveal reveal-delay-1">
+                    <div class="service-icon"><i data-lucide="bell" style="width:28px;height:28px;"></i></div>
+                    <h3>Smart Notifications</h3>
+                    <p>Automated notification system with centralized logging and real-time delivery tracking.</p>
+                    <a href="#" class="card-link">Learn more <i data-lucide="arrow-right"
+                            style="width:16px;height:16px;"></i></a>
+                </div>
+                <!-- Card 6 -->
+                <div class="service-card reveal reveal-delay-2">
+                    <div class="service-icon"><i data-lucide="shield-check" style="width:28px;height:28px;"></i></div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade security with encrypted data, audit trails, and compliance-ready infrastructure.</p>
+                    <a href="#" class="card-link">Learn more <i data-lucide="arrow-right"
+                            style="width:16px;height:16px;"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ PORTFOLIO / DARK SECTION ═══════════════════════ -->
+    <section class="portfolio" id="portfolio">
+        <div class="container-lp">
+            <div class="section-header reveal">
+                <h2 class="section-title">Showcasing our<br>product excellence</h2>
+                <p class="section-subtitle">See how our platform transforms enterprise operations with beautiful,
+                    intuitive interfaces.</p>
+            </div>
+
+            <div class="portfolio-grid">
+                <!-- Card 1 -->
+                <div class="portfolio-card reveal">
+                    <div class="portfolio-card-img">
+                        <img src="{% static 'images/hero-dashboard.png' %}" alt="Dashboard UI">
+                    </div>
+                    <div class="portfolio-card-body">
+                        <span class="tag">Dashboard</span>
+                        <h3>Enterprise Analytics Dashboard</h3>
+                        <p>Real-time data visualization with comprehensive charts and KPI tracking.</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="portfolio-card reveal reveal-delay-1">
+                    <div class="portfolio-card-img">
+                        <img src="{% static 'images/phone-mockup.png' %}" alt="Mobile App"
+                            style="object-fit: contain; padding: 10px;">
+                    </div>
+                    <div class="portfolio-card-body">
+                        <span class="tag">Mobile</span>
+                        <h3>Mobile-First Experience</h3>
+                        <p>Access your management system on-the-go with our responsive mobile interface.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="portfolio-card reveal reveal-delay-2">
+                    <div class="portfolio-card-img"
+                        style="background: linear-gradient(135deg, #1A1F25 0%, #0B0F14 100%);">
+                        <div
+                            style="display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.3);">
+                            <i data-lucide="layout-dashboard" style="width:48px;height:48px;"></i>
+                            <span style="font-size:0.8rem;">Workflow Engine</span>
+                        </div>
+                    </div>
+                    <div class="portfolio-card-body">
+                        <span class="tag">Workflow</span>
+                        <h3>Automated Request Pipeline</h3>
+                        <p>Intelligent workflow routing with approval chains and escalation management.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+    <section class="testimonials" id="testimonials">
+        <div class="container-lp">
+            <div class="section-header reveal">
+                <h2 class="section-title">What our clients say</h2>
+                <p class="section-subtitle">Hear from enterprise leaders who transformed their operations with GA
+                    System.</p>
+            </div>
+
+            <div class="testimonial-slider reveal">
+                <div class="testimonial-track">
+                    <!-- Slide 1 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+                        <blockquote>
+                            "GA System revolutionized how we handle general affairs. The automated workflows
+                            saved us 40% of processing time and the analytics dashboard gives us real-time
+                            visibility into every request."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <div class="avatar">AR</div>
+                            <span class="name">Ahmad Rizqi</span>
+                            <span class="role">Head of GA — PT TechCorp Indonesia</span>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+                        <blockquote>
+                            "The WhatsApp integration alone made this worth it. Our team gets instant
+                            notifications and our response time dropped from hours to minutes.
+                            Absolutely game-changing."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <div class="avatar">SN</div>
+                            <span class="name">Sarah Nurhayati</span>
+                            <span class="role">Operations Manager — InnovateLab</span>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+                        <blockquote>
+                            "Clean UI, powerful features, and exceptional support. GA System handles
+                            everything from procurement requests to facility management seamlessly.
+                            It's the backbone of our operations."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <div class="avatar">BW</div>
+                            <span class="name">Budi Wibowo</span>
+                            <span class="role">CTO — GlobalNet Solutions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-dots">
+                    <button class="dot active" aria-label="Slide 1"></button>
+                    <button class="dot" aria-label="Slide 2"></button>
+                    <button class="dot" aria-label="Slide 3"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ BLOG PREVIEW ═══════════════════════ -->
+    <section class="blog-preview" id="blog">
+        <div class="container-lp">
+            <div class="section-header reveal">
+                <div>
+                    <h2 class="section-title">Latest insights</h2>
+                    <p class="section-subtitle" style="margin-top:16px;">Explore our latest articles on enterprise
+                        management and technology trends.</p>
+                </div>
+                <a href="#" class="btn-secondary-lp">View All Posts <i data-lucide="arrow-right"
+                        style="width:16px;height:16px;"></i></a>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Blog 1 -->
+                <div class="blog-card reveal">
+                    <div class="blog-card-img">📊</div>
+                    <div class="blog-card-body">
+                        <div class="blog-meta">
+                            <span class="blog-category">Management</span>
+                            <span>Mar 5, 2026</span>
+                        </div>
+                        <h3>5 Ways to Streamline Enterprise General Affairs</h3>
+                        <p>Learn how modern tools can transform your GA operations and reduce overhead costs.</p>
+                    </div>
+                </div>
+                <!-- Blog 2 -->
+                <div class="blog-card reveal reveal-delay-1">
+                    <div class="blog-card-img">🔔</div>
+                    <div class="blog-card-body">
+                        <div class="blog-meta">
+                            <span class="blog-category">Technology</span>
+                            <span>Mar 2, 2026</span>
+                        </div>
+                        <h3>WhatsApp API Integration: A Complete Guide</h3>
+                        <p>How to leverage WhatsApp for enterprise notifications and team communication.</p>
+                    </div>
+                </div>
+                <!-- Blog 3 -->
+                <div class="blog-card reveal reveal-delay-2">
+                    <div class="blog-card-img">🛡️</div>
+                    <div class="blog-card-body">
+                        <div class="blog-meta">
+                            <span class="blog-category">Security</span>
+                            <span>Feb 28, 2026</span>
+                        </div>
+                        <h3>Enterprise Security Best Practices in 2026</h3>
+                        <p>Essential security measures every enterprise should implement for data protection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ FAQ ═══════════════════════ -->
+    <section class="faq" id="faq">
+        <div class="container-lp">
+            <div class="section-header reveal">
+                <h2 class="section-title">Frequently asked questions</h2>
+                <p class="section-subtitle">Find answers to the most common questions about our platform.</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        What is GA System?
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            GA System is an Enterprise General Affair Management System that helps organizations
+                            streamline service requests, manage workflows, and automate notifications.
+                            It provides role-based access, analytics dashboards, and WhatsApp integration
+                            for comprehensive enterprise management.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal reveal-delay-1">
+                    <button class="faq-question">
+                        How does the service request workflow work?
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Employees submit requests through the platform, which are automatically routed to
+                            the appropriate GA staff. Requests go through a structured approval workflow with
+                            real-time status tracking, automated notifications, and complete audit trails.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal reveal-delay-2">
+                    <button class="faq-question">
+                        Is there a WhatsApp integration?
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Yes! GA System integrates with WhatsApp via Baileys API for real-time notifications.
+                            You can broadcast messages, send automated updates, and use dynamic message templates
+                            to keep your entire team informed instantly.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal reveal-delay-3">
+                    <button class="faq-question">
+                        What roles and permissions are supported?
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            The system supports three core roles: Employees (submit and track requests),
+                            GA Staff (process and manage requests), and Managers (full oversight with
+                            approval authority). Each role has carefully designed permissions.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal reveal-delay-4">
+                    <button class="faq-question">
+                        Can I customize the dashboard?
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Absolutely! The analytics dashboard is fully customizable with Chart.js-powered
+                            visualizations. You can configure widgets, set up custom reports, and track
+                            KPIs that matter most to your organization.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ CTA ═══════════════════════ -->
+    <section class="cta-section" id="cta">
+        <div class="container-lp">
+            <h2 class="cta-title reveal">Ready to work with us?</h2>
+            <p class="cta-desc reveal reveal-delay-1">
+                Join 230+ enterprises that trust GA System to manage their operations.
+                Start your free trial today — no credit card required.
+            </p>
+            <div class="cta-buttons reveal reveal-delay-2">
+                <a href="{% url 'users:login' %}" class="btn-white">
+                    Get Started Free
+                    <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+                </a>
+                <a href="#services" class="btn-accent">
+                    <i data-lucide="play-circle" style="width:18px;height:18px;"></i>
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+    <footer class="lp-footer">
+        <div class="container-lp">
+            <div class="footer-grid">
+                <!-- Brand -->
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">⚡</span>
+                        GA System
+                    </div>
+                    <p>Enterprise General Affair Management System. Streamline your operations with our forward-thinking
+                        platform.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Twitter"><i data-lucide="twitter"
+                                style="width:18px;height:18px;"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"
+                                style="width:18px;height:18px;"></i></a>
+                        <a href="#" aria-label="GitHub"><i data-lucide="github" style="width:18px;height:18px;"></i></a>
+                        <a href="#" aria-label="Instagram"><i data-lucide="instagram"
+                                style="width:18px;height:18px;"></i></a>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#services">Features</a></li>
+                        <li><a href="#portfolio">Showcase</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company -->
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 GA System. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Landing JS -->
+    <script src="{% static 'js/landing.js' %}"></script>
+    <script>
+        // Initialize Lucide icons after DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>
