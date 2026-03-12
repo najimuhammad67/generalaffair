@@ -2,7 +2,7 @@
    GA System — Modern Minimalist Dashboard Design System
    
    Color Palette:
-     Primary Accent  : #7CFF6B / #4ADE80
+     Primary Accent  : #06B6D4 / #0891B2 (Cyan)
      Background      : #F8F9FB
      Dark Section    : #0B0F14
      Card BG         : #FFFFFF
@@ -14,10 +14,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --accent: #7CFF6B;
-    --accent-alt: #8AFF4F;
-    --accent-dim: #4ADE80;
-    --accent-dark: #22C55E;
+    --accent: #06B6D4;
+    --accent-alt: #22D3EE;
+    --accent-dim: #0891B2;
+    --accent-dark: #0E7490;
     --bg: #F8F9FB;
     --dark: #0B0F14;
     --dark-alt: #1A1F25;
@@ -118,7 +118,7 @@ a:hover {
 }
 
 .navbar-ga .badge {
-    background: rgba(124, 255, 107, 0.15) !important;
+    background: rgba(6, 182, 212, 0.15) !important;
     color: var(--accent) !important;
     font-size: 0.72rem;
     font-weight: 600;
@@ -232,7 +232,7 @@ a:hover {
 .card-stat:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow) !important;
-    border-color: rgba(124, 255, 107, 0.2);
+    border-color: rgba(6, 182, 212, 0.2);
 }
 
 .card-stat:hover::before {
@@ -256,7 +256,7 @@ a:hover {
 }
 
 .stat-icon.primary {
-    background: rgba(124, 255, 107, 0.12);
+    background: rgba(6, 182, 212, 0.12);
     color: var(--accent-dim);
 }
 
@@ -316,7 +316,7 @@ a:hover {
 }
 
 .table-hover>tbody>tr:hover {
-    background-color: rgba(124, 255, 107, 0.03);
+    background-color: rgba(6, 182, 212, 0.03);
 }
 
 /* ---------- Badges ---------- */
@@ -344,7 +344,7 @@ a:hover {
 }
 
 .bg-primary {
-    background: rgba(124, 255, 107, 0.12) !important;
+    background: rgba(6, 182, 212, 0.12) !important;
     color: var(--accent-dark) !important;
 }
 
@@ -447,7 +447,7 @@ a:hover {
 .form-control:focus,
 .form-select:focus {
     border-color: var(--accent-dim);
-    box-shadow: 0 0 0 3px rgba(124, 255, 107, 0.12);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.12);
 }
 
 .form-label {
@@ -638,7 +638,45 @@ a:hover {
     min-height: 320px;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Mobile Responsive Cards ---------- */
+.mobile-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: var(--transition);
+}
+
+.mobile-card:active {
+    background: var(--bg);
+}
+
+.mobile-card .card-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.mobile-card .card-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.mobile-card .card-footer-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    margin-top: 5px;
+}
+
+/* ---------- Responsive Overrides ---------- */
 @media (max-width: 768px) {
     .stat-number {
         font-size: 1.5rem;
@@ -650,6 +688,20 @@ a:hover {
 
     .page-container {
         padding: 20px 0;
+    }
+
+    /* Info Table in Details */
+    .info-table th {
+        width: 100% !important;
+        display: block;
+        padding-bottom: 0 !important;
+    }
+    
+    .info-table td {
+        width: 100% !important;
+        display: block;
+        padding-top: 4px !important;
+        margin-bottom: 12px;
     }
 }
 
@@ -673,6 +725,6 @@ a:hover {
 
 /* ---------- Selection ---------- */
 ::selection {
-    background: rgba(124, 255, 107, 0.2);
+    background: rgba(6, 182, 212, 0.2);
     color: var(--text);
 }

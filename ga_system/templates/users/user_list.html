@@ -1,139 +1,196 @@
 {% extends "base.html" %}
 {% block title %}Kelola Karyawan — GA System{% endblock %}
 
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .page-container {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0">
-        <i class="bi bi-people me-2 text-primary"></i>Kelola Karyawan
-    </h4>
-    <a href="{% url 'users:user_create' %}" class="btn btn-primary">
+<!-- Page Header -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h4 class="fw-bold mb-1">
+            <i class="bi bi-people me-2 text-primary"></i>Kelola Karyawan
+        </h4>
+        <p class="text-muted small mb-0">Manajemen data pengguna dan hak akses sistem.</p>
+    </div>
+    <a href="{% url 'users:user_create' %}" class="btn btn-primary shadow-sm rounded-pill px-4">
         <i class="bi bi-person-plus me-1"></i>Tambah User
     </a>
 </div>
 
 <!-- Filters -->
 <div class="card shadow-sm border-0 mb-4">
-    <div class="card-body py-2">
+    <div class="card-body p-3">
         <form method="get" class="row g-2 align-items-end">
-            <div class="col-md-3">
-                <label class="form-label small fw-semibold mb-1">Role</label>
-                <select name="role" class="form-select form-select-sm">
+            <div class="col-6 col-md-3">
+                <label class="form-label small fw-semibold mb-1 text-muted">Filter Role</label>
+                <select name="role" class="form-select form-select-sm border-light bg-light bg-opacity-50">
                     <option value="">Semua Role</option>
                     {% for value, label in role_choices %}
                     <option value="{{ value }}" {% if value == current_role %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-5">
-                <label class="form-label small fw-semibold mb-1">Cari</label>
-                <input type="text" name="q" value="{{ current_q }}" class="form-control form-control-sm"
-                    placeholder="Cari nama, username, atau nomor HP...">
+            <div class="col-6 col-md-5">
+                <label class="form-label small fw-semibold mb-1 text-muted">Pencarian</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text border-light bg-light bg-opacity-50 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" value="{{ current_q }}" class="form-control border-light bg-light bg-opacity-50"
+                        placeholder="Nama/Username/HP...">
+                </div>
             </div>
-            <div class="col-md-4 d-flex gap-2">
-                <button type="submit" class="btn btn-sm btn-primary">
-                    <i class="bi bi-search me-1"></i>Filter
+            <div class="col-12 col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-dark flex-grow-1">
+                    Filter
                 </button>
-                <a href="{% url 'users:user_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+                <a href="{% url 'users:user_list' %}" class="btn btn-sm btn-outline-secondary px-3">Reset</a>
             </div>
         </form>
     </div>
 </div>
 
-<!-- User Table -->
-<div class="card shadow-sm border-0">
+<!-- Desktop View (Table) -->
+<div class="card shadow-sm border-0 d-none d-md-block overflow-hidden">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Username</th>
-                    <th>Nama</th>
+                    <th class="ps-4">Username</th>
+                    <th>Nama Lengkap</th>
                     <th>Role</th>
                     <th>No. WhatsApp</th>
                     <th>Status</th>
-                    <th class="text-end">Aksi</th>
+                    <th class="text-end pe-4">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 {% for u in users_list %}
                 <tr>
-                    <td class="fw-semibold">{{ u.username }}</td>
+                    <td class="ps-4 fw-semibold text-dark">{{ u.username }}</td>
                     <td>{{ u.get_full_name|default:"-" }}</td>
                     <td>
-                        <span
-                            class="badge {% if u.role == 'manager' %}bg-danger{% elif u.role == 'ga' %}bg-info text-dark{% else %}bg-secondary{% endif %}">
+                        <span class="badge {% if u.role == 'manager' %}bg-danger{% elif u.role == 'ga' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill">
                             {{ u.get_role_display }}
                         </span>
                     </td>
                     <td>
                         {% if u.phone %}
-                        <i class="bi bi-whatsapp text-success me-1"></i>{{ u.phone }}
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-whatsapp text-success me-2"></i>{{ u.phone }}
+                        </div>
                         {% else %}
-                        <span class="text-muted">—</span>
+                        <span class="text-muted small">—</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if u.is_active %}
-                        <span class="badge bg-success">Aktif</span>
+                        <span class="badge bg-success rounded-pill">Aktif</span>
                         {% else %}
-                        <span class="badge bg-secondary">Nonaktif</span>
+                        <span class="badge bg-secondary rounded-pill">Nonaktif</span>
                         {% endif %}
                     </td>
-                    <td class="text-end">
+                    <td class="text-end pe-4">
                         {% if u != request.user %}
-                        <a href="{% url 'users:user_edit' u.pk %}" class="btn btn-sm btn-outline-primary me-1">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                        <a href="{% url 'users:admin_reset_password' u.pk %}"
-                            class="btn btn-sm btn-outline-warning me-1">
-                            <i class="bi bi-key"></i>
-                        </a>
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                            data-bs-target="#deleteModal{{ u.pk }}">
-                            <i class="bi bi-trash"></i>
-                        </button>
-
-                        <!-- Delete Modal -->
-                        <div class="modal fade" id="deleteModal{{ u.pk }}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title"><i
-                                                class="bi bi-exclamation-triangle me-2"></i>Konfirmasi Hapus</h5>
-                                        <button type="button" class="btn-close btn-close-white"
-                                            data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body text-start">
-                                        <p>Apakah Anda yakin ingin menghapus user <strong>{{ u.username }}</strong> ({{
-                                            u.get_full_name|default:"-" }})?</p>
-                                        <p class="text-muted small mb-0">Semua data pengajuan milik user ini juga akan
-                                            ikut terhapus.</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Batal</button>
-                                        <form method="post" action="{% url 'users:user_delete' u.pk %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">
-                                                <i class="bi bi-trash me-1"></i>Ya, Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'users:user_edit' u.pk %}" class="btn btn-outline-primary" title="Edit">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="{% url 'users:admin_reset_password' u.pk %}" class="btn btn-outline-warning" title="Reset Password">
+                                <i class="bi bi-key"></i>
+                            </a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ u.pk }}" title="Hapus">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </div>
+                        {% include 'users/includes/delete_modal.html' with u=u %}
                         {% else %}
-                        <span class="badge bg-light text-muted">Anda</span>
+                        <span class="badge bg-light text-muted fw-normal border">Anda</span>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">Tidak ada data user ditemukan.</td>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-people fs-2 d-block mb-2 opacity-25"></i>
+                        Tidak ada data user ditemukan.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Mobile View (Cards) -->
+<div class="d-md-none">
+    {% for u in users_list %}
+    <div class="mobile-card shadow-sm border-0 mb-3 bg-white">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <div class="fw-bold text-dark fs-6">{{ u.get_full_name|default:u.username }}</div>
+                <div class="small text-muted">@{{ u.username }}</div>
+            </div>
+            <span class="badge {% if u.role == 'manager' %}bg-danger{% elif u.role == 'ga' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                {{ u.get_role_display }}
+            </span>
+        </div>
+        
+        <div class="row g-2 mb-3">
+            <div class="col-6">
+                <div class="card-label">WhatsApp</div>
+                <div class="card-value mb-0">
+                    {% if u.phone %}
+                    <i class="bi bi-whatsapp text-success me-1"></i>{{ u.phone }}
+                    {% else %}
+                    <span class="text-muted small">—</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card-label">Status</div>
+                <div class="card-value mb-0">
+                    {% if u.is_active %}
+                    <span class="text-success small fw-semibold">● Aktif</span>
+                    {% else %}
+                    <span class="text-muted small fw-semibold">● Nonaktif</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer-mobile bg-light bg-opacity-50 mx-n3 px-3 mt-2 pt-2 border-top">
+            <div class="text-muted small">ID: #{{ u.pk }}</div>
+            <div class="d-flex gap-1">
+                {% if u != request.user %}
+                <a href="{% url 'users:user_edit' u.pk %}" class="btn btn-sm btn-outline-primary border-0">
+                    <i class="bi bi-pencil-square me-1"></i>Edit
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger border-0" data-bs-toggle="modal"
+                    data-bs-target="#deleteModal{{ u.pk }}">
+                    <i class="bi bi-trash"></i>
+                </button>
+                {% include 'users/includes/delete_modal.html' with u=u %}
+                {% else %}
+                <span class="text-muted small">Anda</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-5 bg-white rounded-4 border">
+        <i class="bi bi-people fs-1 d-block mb-2 opacity-25"></i>
+        Belum ada data user.
+    </div>
+    {% endfor %}
 </div>
 
 <!-- Pagination -->

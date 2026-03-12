@@ -2,50 +2,129 @@
 
 {% block title %}Log Notifikasi — GA System{% endblock %}
 
-{% block content %}
-<h4 class="fw-bold mb-4">
-    <i class="bi bi-bell me-2 text-primary"></i>Log Notifikasi WhatsApp
-</h4>
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .page-container {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+    }
+</style>
+{% endblock %}
 
-<div class="card shadow-sm border-0">
+{% block content %}
+<!-- Page Header -->
+<div class="mb-4">
+    <h4 class="fw-bold mb-1">
+        <i class="bi bi-bell me-2 text-primary"></i>Log Notifikasi WhatsApp
+    </h4>
+    <p class="text-muted small mb-0">Riwayat pengiriman notifikasi otomatis sistem.</p>
+</div>
+
+<!-- Desktop View (Table) -->
+<div class="card shadow-sm border-0 d-none d-md-block overflow-hidden">
     <div class="table-responsive">
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>#</th>
+                    <th class="ps-4">#</th>
                     <th>Request</th>
                     <th>Penerima</th>
                     <th>Pesan</th>
                     <th>Status</th>
-                    <th>Waktu</th>
+                    <th class="pe-4">Waktu</th>
                 </tr>
             </thead>
             <tbody>
                 {% for log in logs %}
                 <tr>
-                    <td>{{ log.pk }}</td>
+                    <td class="ps-4 text-muted small">{{ log.pk }}</td>
                     <td>
-                        <a href="{% url 'requests_app:request_detail' log.service_request_id %}">
+                        <a href="{% url 'requests_app:request_detail' log.service_request_id %}" class="fw-bold text-decoration-none">
                             #{{ log.service_request_id }}
                         </a>
                     </td>
-                    <td>{% if log.recipient %}{{ log.recipient.get_full_name|default:log.recipient.username }}{% else %}<span class="text-muted fst-italic">Deleted User</span>{% endif %}</td>
-                    <td class="small" style="max-width:300px;">{{ log.message|truncatewords:20 }}</td>
                     <td>
-                        <span class="badge {% if log.status == 'sent' %}bg-success{% else %}bg-danger{% endif %}">
+                        {% if log.recipient %}
+                        <div class="fw-semibold">{{ log.recipient.get_full_name|default:log.recipient.username }}</div>
+                        <div class="small text-muted">{{ log.recipient.phone|default:"" }}</div>
+                        {% else %}
+                        <span class="text-muted fst-italic small">User Dihapus</span>
+                        {% endif %}
+                    </td>
+                    <td class="small text-secondary" style="max-width:300px;">
+                        <div class="text-truncate" title="{{ log.message }}">{{ log.message }}</div>
+                    </td>
+                    <td>
+                        <span class="badge {% if log.status == 'sent' %}bg-success{% else %}bg-danger{% endif %} rounded-pill">
                             {{ log.get_status_display }}
                         </span>
                     </td>
-                    <td class="small text-muted">{{ log.created_at|date:"d/m/Y H:i" }}</td>
+                    <td class="pe-4 small text-muted">
+                        {{ log.created_at|date:"d/m/Y" }}<br>
+                        <span class="opacity-75">{{ log.created_at|date:"H:i" }}</span>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">Belum ada notifikasi.</td>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-bell-slash fs-2 d-block mb-2 opacity-25"></i>
+                        Belum ada riwayat notifikasi.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Mobile View (Cards) -->
+<div class="d-md-none">
+    {% for log in logs %}
+    <div class="mobile-card shadow-sm border-0 mb-3 bg-white">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <a href="{% url 'requests_app:request_detail' log.service_request_id %}" class="fw-bold text-primary text-decoration-none">
+                    REQ #{{ log.service_request_id }}
+                </a>
+                <div class="small text-muted mt-1">
+                    <i class="bi bi-clock me-1"></i>{{ log.created_at|date:"d/m/Y H:i" }}
+                </div>
+            </div>
+            <span class="badge {% if log.status == 'sent' %}bg-success{% else %}bg-danger{% endif %} rounded-pill">
+                {{ log.get_status_display }}
+            </span>
+        </div>
+        
+        <div class="mb-3">
+            <div class="card-label">Penerima</div>
+            <div class="card-value mb-0">
+                {% if log.recipient %}
+                {{ log.recipient.get_full_name|default:log.recipient.username }}
+                {% else %}
+                <span class="text-muted fst-italic">User Dihapus</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="p-2 bg-light rounded-3 small text-secondary">
+            {{ log.message|truncatewords:20 }}
+        </div>
+
+        <div class="card-footer-mobile mt-3 pt-2 border-top">
+            <div class="text-muted small">ID Log: #{{ log.pk }}</div>
+            <a href="{% url 'requests_app:request_detail' log.service_request_id %}" class="btn btn-sm btn-outline-primary border-0">
+                Detail Request <i class="bi bi-chevron-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-5 bg-white rounded-4 border">
+        <i class="bi bi-bell-slash fs-1 d-block mb-2 opacity-25"></i>
+        Belum ada riwayat notifikasi.
+    </div>
+    {% endfor %}
 </div>
 
 <!-- Pagination -->

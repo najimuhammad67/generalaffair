@@ -2,135 +2,209 @@
 
 {% block title %}WhatsApp Dashboard — GA System{% endblock %}
 
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .page-container {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+        
+        .mobile-card {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+    
+    .status-icon-container {
+        width: 80px;
+        height: 80px;
+        background: rgba(6, 182, 212, 0.1);
+        color: var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2.5rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0">
-        <i class="bi bi-whatsapp me-2 text-success"></i>WhatsApp Dashboard
-    </h4>
-    <a href="{% url 'notifications:log_list' %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-list-ul me-1"></i>Lihat Semua Log
-    </a>
+<!-- Page Header -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h4 class="fw-bold mb-1">
+            <i class="bi bi-whatsapp me-2 text-primary"></i>WhatsApp Dashboard
+        </h4>
+        <p class="text-muted small mb-0">Monitor status koneksi dan riwayat pengiriman pesan.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'notifications:log_list' %}" class="btn btn-outline-secondary btn-sm px-3 shadow-sm rounded-pill">
+            <i class="bi bi-list-ul me-1"></i>Log Notifikasi
+        </a>
+        <button onclick="location.reload()" class="btn btn-light btn-sm px-3 border shadow-sm rounded-pill">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+    </div>
 </div>
 
-<!-- Connection Status -->
 <div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body text-center py-4">
+    <!-- Connection Status -->
+    <div class="col-lg-4 col-md-5">
+        <div class="card shadow-sm border-0 h-100 bg-white overflow-hidden">
+            <div class="card-body text-center py-5 d-flex flex-column justify-content-center">
                 {% if wa_service_down %}
-                <div class="display-4 text-danger mb-2"><i class="bi bi-exclamation-triangle"></i></div>
-                <h5 class="fw-bold text-danger">Service Offline</h5>
-                <p class="text-muted small mb-3">WA Service tidak dapat dihubungi. Pastikan <code>node index.js</code>
-                    sedang berjalan.</p>
-                <span class="badge bg-danger px-3 py-2">Offline</span>
+                <div class="status-icon-container text-danger" style="background: rgba(239, 68, 68, 0.1);">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h5 class="fw-bold text-danger mb-1">Service Offline</h5>
+                <p class="text-muted small mb-4 px-3">WA Service (Node.js) tidak aktif atau port terblokir.</p>
+                <div class="mt-auto">
+                    <span class="badge bg-danger rounded-pill px-4 py-2">Offline</span>
+                </div>
                 {% elif wa_connected %}
-                <div class="display-4 text-success mb-2"><i class="bi bi-check-circle"></i></div>
-                <h5 class="fw-bold text-success">Terhubung</h5>
-                <p class="text-muted small mb-3">WhatsApp aktif dan siap mengirim pesan.</p>
-                <span class="badge bg-success px-3 py-2"><i class="bi bi-wifi me-1"></i>Connected</span>
+                <div class="status-icon-container text-success" style="background: rgba(16, 185, 129, 0.1);">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h5 class="fw-bold text-success mb-1">Terhubung</h5>
+                <p class="text-muted small mb-4 px-3">WhatsApp aktif dan siap mengirim notifikasi otomatis.</p>
+                <div class="mt-auto">
+                    <span class="badge bg-success rounded-pill px-4 py-2"><i class="bi bi-wifi me-1"></i>Connected</span>
+                </div>
                 {% elif wa_qr_pending %}
-                <div class="display-4 text-warning mb-2"><i class="bi bi-qr-code"></i></div>
-                <h5 class="fw-bold text-warning">Butuh Login</h5>
-                <p class="text-muted small mb-3">Scan QR code untuk menghubungkan WhatsApp.</p>
-                <a href="{{ wa_qr_url }}" target="_blank" class="btn btn-success">
-                    <i class="bi bi-qr-code-scan me-1"></i>Buka QR Code
-                </a>
+                <div class="status-icon-container">
+                    <i class="bi bi-qr-code"></i>
+                </div>
+                <h5 class="fw-bold text-primary mb-1">Butuh Login</h5>
+                <p class="text-muted small mb-4 px-3">Silakan scan QR code untuk menautkan perangkat GA System.</p>
+                <div class="mt-auto">
+                    <a href="{{ wa_qr_url }}" target="_blank" class="btn btn-primary btn-sm rounded-pill px-4 py-2 shadow-sm">
+                        <i class="bi bi-qr-code-scan me-1"></i>Buka QR Code
+                    </a>
+                </div>
                 {% else %}
-                <div class="display-4 text-secondary mb-2"><i class="bi bi-question-circle"></i></div>
-                <h5 class="fw-bold text-secondary">Menunggu...</h5>
-                <p class="text-muted small mb-3">Menunggu koneksi dari WA Service.</p>
-                <span class="badge bg-secondary px-3 py-2">Waiting</span>
+                <div class="status-icon-container text-secondary" style="background: rgba(100, 116, 139, 0.1);">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <h5 class="fw-bold text-secondary mb-1">Menunggu...</h5>
+                <p class="text-muted small mb-4 px-3">Sedang melakukan inisialisasi koneksi ke WA Service.</p>
+                <div class="mt-auto">
+                    <span class="badge bg-secondary rounded-pill px-4 py-2">Initializing</span>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Stats -->
-    <div class="col-md-8">
-        <div class="row g-4">
-            <div class="col-sm-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <div class="display-6 fw-bold text-primary">{{ total_notifications }}</div>
-                        <p class="text-muted small mb-0">Total Notifikasi</p>
+    <!-- Stats Grid -->
+    <div class="col-lg-8 col-md-7">
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-sm-4">
+                <div class="card shadow-sm border-0 h-100 bg-white border-start border-primary border-4">
+                    <div class="card-body p-3">
+                        <div class="text-muted small fw-semibold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Total Log</div>
+                        <div class="h3 fw-bold text-primary mb-0">{{ total_notifications }}</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <div class="display-6 fw-bold text-success">{{ sent_notifications }}</div>
-                        <p class="text-muted small mb-0">Terkirim</p>
+            <div class="col-6 col-sm-4">
+                <div class="card shadow-sm border-0 h-100 bg-white border-start border-success border-4">
+                    <div class="card-body p-3">
+                        <div class="text-muted small fw-semibold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Terkirim</div>
+                        <div class="h3 fw-bold text-success mb-0">{{ sent_notifications }}</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <div class="display-6 fw-bold text-danger">{{ failed_notifications }}</div>
-                        <p class="text-muted small mb-0">Gagal</p>
+            <div class="col-12 col-sm-4">
+                <div class="card shadow-sm border-0 h-100 bg-white border-start border-danger border-4">
+                    <div class="card-body p-3">
+                        <div class="text-muted small fw-semibold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Gagal</div>
+                        <div class="h3 fw-bold text-danger mb-0">{{ failed_notifications }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Quick Guide -->
-        <div class="card shadow-sm border-0 mt-4">
-            <div class="card-body">
-                <h6 class="fw-bold mb-2"><i class="bi bi-info-circle me-1 text-primary"></i>Cara Pairing WhatsApp</h6>
-                <ol class="small text-muted mb-0">
-                    <li>Jalankan <code>cd wa-service && node index.js</code> di terminal</li>
-                    <li>Klik tombol <b>"Buka QR Code"</b> atau buka <code>http://localhost:3001/api/qr</code></li>
-                    <li>Buka WhatsApp di HP → <b>Linked Devices</b> → <b>Link a Device</b></li>
-                    <li>Scan QR code → tunggu sampai status berubah <span class="badge bg-success">Connected</span></li>
-                </ol>
+        <div class="card shadow-sm border-0 bg-dark text-white rounded-4 overflow-hidden">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3 d-flex align-items-center">
+                    <i class="bi bi-info-circle me-2 text-success"></i>Panduan Pairing
+                </h6>
+                <div class="small opacity-75">
+                    <div class="d-flex mb-2">
+                        <span class="badge bg-success me-2 h-100 px-2">1</span>
+                        <span>Jalankan <code>node index.js</code> di direktori <code>wa-service</code>.</span>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <span class="badge bg-success me-2 h-100 px-2">2</span>
+                        <span>Klik <b>Buka QR Code</b> di atas untuk memunculkan kode pairing.</span>
+                    </div>
+                    <div class="d-flex mb-0">
+                        <span class="badge bg-success me-2 h-100 px-2">3</span>
+                        <span>Scan menggunakan menu <b>Linked Devices</b> di aplikasi WhatsApp HP Anda.</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Recent Logs -->
-<div class="card shadow-sm border-0">
-    <div class="card-header bg-white">
-        <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-1"></i>10 Notifikasi Terakhir</h6>
-    </div>
+<div class="mb-3 d-flex align-items-center">
+    <h6 class="fw-bold mb-0">
+        <i class="bi bi-clock-history me-2 text-primary"></i>10 Aktivitas Terakhir
+    </h6>
+    <hr class="flex-grow-1 ms-3 opacity-10">
+</div>
+
+<!-- Desktop View (Table) -->
+<div class="card shadow-sm border-0 d-none d-md-block overflow-hidden mb-4">
     <div class="table-responsive">
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Waktu</th>
+                    <th class="ps-4">Waktu</th>
                     <th>Penerima</th>
                     <th>Pesan</th>
-                    <th>Status</th>
+                    <th class="pe-4 text-end">Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for log in recent_logs %}
                 <tr>
-                    <td class="small text-muted text-nowrap">{{ log.created_at|date:"d/m/Y H:i" }}</td>
+                    <td class="ps-4 small text-muted text-nowrap">
+                        <i class="bi bi-calendar-event me-1"></i>{{ log.created_at|date:"d/m/Y H:i" }}
+                    </td>
                     <td>
                         {% if log.recipient %}
-                        {{ log.recipient.get_full_name|default:log.recipient.username }}
+                        <div class="fw-semibold text-dark">{{ log.recipient.get_full_name|default:log.recipient.username }}</div>
+                        <div class="small text-muted">{{ log.recipient.phone|default:"-" }}</div>
                         {% else %}
-                        <span class="text-muted fst-italic">Deleted User</span>
+                        <span class="text-muted fst-italic small">User Dihapus</span>
                         {% endif %}
                     </td>
-                    <td class="small" style="max-width:300px">
-                        <span class="d-inline-block text-truncate" style="max-width:300px" title="{{ log.message }}">
+                    <td class="small" style="max-width:350px">
+                        <div class="text-truncate text-secondary" title="{{ log.message }}">
                             {{ log.message }}
-                        </span>
+                        </div>
                     </td>
-                    <td>
+                    <td class="pe-4 text-end">
                         {% if log.status == 'sent' %}
-                        <span class="badge bg-success"><i class="bi bi-check2 me-1"></i>Terkirim</span>
+                        <span class="badge bg-success rounded-pill px-3"><i class="bi bi-check2 me-1"></i>Terkirim</span>
                         {% else %}
-                        <span class="badge bg-danger"><i class="bi bi-x me-1"></i>Gagal</span>
+                        <span class="badge bg-danger rounded-pill px-3"><i class="bi bi-x me-1"></i>Gagal</span>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="text-center text-muted py-4">Belum ada notifikasi.</td>
+                    <td colspan="4" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 opacity-25"></i>
+                        Belum ada aktivitas tercatat.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -138,9 +212,58 @@
     </div>
 </div>
 
-<!-- Auto refresh -->
+<!-- Mobile View (Cards) -->
+<div class="d-md-none mb-4">
+    {% for log in recent_logs %}
+    <div class="mobile-card shadow-sm border-0 bg-white mb-3">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="small text-muted">
+                <i class="bi bi-clock me-1"></i>{{ log.created_at|date:"d/m/Y H:i" }}
+            </div>
+            {% if log.status == 'sent' %}
+            <span class="badge bg-success rounded-pill">Terkirim</span>
+            {% else %}
+            <span class="badge bg-danger rounded-pill">Gagal</span>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <div class="card-label">Penerima</div>
+            <div class="card-value mb-0">
+                {% if log.recipient %}
+                {{ log.recipient.get_full_name|default:log.recipient.username }}
+                {% else %}
+                <span class="text-muted fst-italic">User Dihapus</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="p-2 bg-light rounded-3 small text-secondary">
+            {{ log.message|truncatewords:15 }}
+        </div>
+        
+        <div class="mt-2 text-end">
+            <a href="{% url 'requests_app:request_detail' log.service_request_id %}" class="small text-decoration-none">
+                Lihat Request #{{ log.service_request_id }} <i class="bi bi-chevron-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-5 bg-white rounded-4 border">
+        <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+        Belum ada aktivitas.
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Auto refresh script -->
 <script>
-    // Refresh status every 10 seconds
-    setTimeout(() => location.reload(), 10000);
+    // Refresh status every 20 seconds instead of 10 to be less aggressive on mobile
+    let refreshTimer = setTimeout(() => {
+        // Only refresh if the user isn't interacting with something important
+        if (!document.querySelector('.modal.show')) {
+            location.reload();
+        }
+    }, 20000);
 </script>
 {% endblock %}

@@ -1,7 +1,7 @@
 /* ============================================================
    Landing Page — Modern Minimalist SaaS / Agency
    Color Palette:
-     Primary Accent  : #7CFF6B / #8AFF4F (neon green)
+     Primary Accent  : #06B6D4 / #0891B2 (Cyan)
      Background      : #F8F9FB
      Dark Section    : #0B0F14 → #1A1F25
      Card BG         : #FFFFFF
@@ -18,9 +18,9 @@
 }
 
 :root {
-    --accent: #7CFF6B;
-    --accent-alt: #8AFF4F;
-    --accent-dim: #4ADE80;
+    --accent: #06B6D4;
+    --accent-alt: #22D3EE;
+    --accent-dim: #0891B2;
     --bg: #F8F9FB;
     --dark: #0B0F14;
     --dark-alt: #1A1F25;
@@ -166,7 +166,7 @@ ul {
 
 .btn-accent:hover {
     transform: scale(1.04);
-    box-shadow: 0 8px 30px rgba(124, 255, 107, 0.35);
+    box-shadow: 0 8px 30px rgba(6, 182, 212, 0.35);
 }
 
 .btn-white {
@@ -294,11 +294,17 @@ ul {
 
 /* ---------- Hero Section ---------- */
 .hero {
-    padding-top: 160px;
+    padding-top: 120px;
     padding-bottom: var(--section-pad);
     background: var(--bg);
     position: relative;
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding-top: 100px;
+    }
 }
 
 .hero::before {
@@ -308,7 +314,7 @@ ul {
     right: -200px;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(124, 255, 107, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -533,13 +539,13 @@ ul {
 .service-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(124, 255, 107, 0.2);
+    border-color: rgba(6, 182, 212, 0.2);
 }
 
 .service-icon {
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, rgba(124, 255, 107, 0.15) 0%, rgba(74, 222, 128, 0.08) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.08) 100%);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -593,7 +599,7 @@ ul {
     transform: translate(-50%, -50%);
     width: 800px;
     height: 800px;
-    background: radial-gradient(circle, rgba(124, 255, 107, 0.06) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -629,7 +635,7 @@ ul {
 
 .portfolio-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(124, 255, 107, 0.2);
+    border-color: rgba(6, 182, 212, 0.2);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
@@ -660,7 +666,7 @@ ul {
     border-radius: 100px;
     font-size: 0.75rem;
     font-weight: 500;
-    background: rgba(124, 255, 107, 0.12);
+    background: rgba(6, 182, 212, 0.12);
     color: var(--accent);
     margin-bottom: 12px;
 }
@@ -817,8 +823,8 @@ ul {
 }
 
 .faq-item.open {
-    border-color: rgba(124, 255, 107, 0.3);
-    box-shadow: 0 4px 20px rgba(124, 255, 107, 0.06);
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.06);
 }
 
 .faq-question {
@@ -888,7 +894,7 @@ ul {
     transform: translateX(-50%);
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(124, 255, 107, 0.1) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -1138,7 +1144,7 @@ ul {
 .blog-card-img {
     width: 100%;
     height: 200px;
-    background: linear-gradient(135deg, #E8FAE6 0%, #D1FAE5 100%);
+    background: linear-gradient(135deg, #CFFAFE 0%, #A5F3FC 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1162,7 +1168,7 @@ ul {
 }
 
 .blog-card-body .blog-meta .blog-category {
-    background: rgba(124, 255, 107, 0.12);
+    background: rgba(6, 182, 212, 0.12);
     color: var(--accent-dim);
     padding: 2px 10px;
     border-radius: 100px;

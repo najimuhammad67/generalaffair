@@ -44,6 +44,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "users.middleware.RoleMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "ga_system.urls"
@@ -122,12 +123,12 @@ USE_TZ = True
 # -------------------------------------------------------------------
 # Static & Media files
 # -------------------------------------------------------------------
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # <-- Tambahkan ini
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # -------------------------------------------------------------------
 # Misc

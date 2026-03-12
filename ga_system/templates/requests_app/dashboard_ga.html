@@ -6,10 +6,11 @@
 <style>
     /* Dashboard-specific modern overlays */
     .dashboard-hero {
-        background: linear-gradient(135deg, rgba(124, 255, 107, 0.08) 0%, rgba(74, 222, 128, 0.02) 100%);
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(8, 145, 178, 0.02) 100%);
         border-radius: var(--radius);
-        padding: 32px;
+        padding: 40px 32px;
         margin-bottom: 32px;
+        border: 1px solid rgba(6, 182, 212, 0.1);
     }
 
     .hero-badge {
@@ -19,16 +20,19 @@
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 100px;
-        padding: 8px 20px 8px 8px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--text-secondary);
+        padding: 8px 16px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--accent-dark);
         margin-bottom: 20px;
+        box-shadow: var(--shadow-sm);
     }
 
     .hero-badge .badge-dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         background: var(--accent);
         border-radius: 50%;
         animation: pulse-dot 2s ease-in-out infinite;
@@ -36,15 +40,16 @@
 
     @keyframes pulse-dot {
         0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.6; transform: scale(1.3); }
+        50% { opacity: 0.4; transform: scale(1.5); }
     }
 
     .hero-title {
-        font-size: clamp(1.8rem, 4vw, 2.5rem);
-        font-weight: 700;
-        line-height: 1.2;
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1.1;
         color: var(--text);
-        margin-bottom: 12px;
+        margin-bottom: 16px;
     }
 
     .hero-title .highlight {
@@ -55,15 +60,17 @@
     }
 
     .hero-subtitle {
-        font-size: 1rem;
+        font-size: 1.05rem;
         color: var(--text-secondary);
         line-height: 1.6;
+        max-width: 600px;
     }
 
     /* Enhanced stat cards */
     .card-stat-enhanced {
         position: relative;
         overflow: hidden;
+        border: 1px solid var(--border) !important;
     }
 
     .card-stat-enhanced::before {
@@ -78,34 +85,28 @@
         transition: var(--transition);
     }
 
+    .card-stat-enhanced:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow) !important;
+        border-color: var(--accent-dim) !important;
+    }
+
     .card-stat-enhanced:hover::before {
         opacity: 1;
     }
 
-    .card-stat-enhanced .stat-icon {
-        margin-bottom: 16px;
-    }
-
     .card-stat-enhanced .stat-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-        line-height: 1;
-        margin-bottom: 8px;
-    }
-
-    .card-stat-enhanced .stat-label {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 4px;
     }
 
     /* Reveal animations */
     .reveal {
         opacity: 0;
         transform: translateY(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
+        transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .reveal.visible {
@@ -113,23 +114,29 @@
         transform: translateY(0);
     }
 
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-
     @media (max-width: 768px) {
         .dashboard-hero {
-            padding: 24px;
+            padding: 32px 20px;
             margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-subtitle {
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .card-stat-enhanced .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         .card-stat-enhanced .card-body {
-            padding: 20px;
+            padding: 16px;
         }
     }
 </style>
@@ -137,12 +144,12 @@
 
 {% block content %}
 <div class="dashboard-hero reveal">
-    <div class="hero-badge">
+    <div class="hero-badge shadow-sm">
         <span class="badge-dot"></span>
         GA Management Dashboard
     </div>
     <h1 class="hero-title">
-        Welcome back<span class="highlight"></span>
+        Welcome back, <span class="highlight">GA Team</span>
     </h1>
     <p class="hero-subtitle">
         Monitor and manage all service requests, track progress, and optimize workflows in real-time.
@@ -150,26 +157,27 @@
 </div>
 
 <!-- Date Range Filter -->
-<div class="card border-0 mb-4 reveal">
-    <div class="card-body">
-        <form method="get" class="row g-2 align-items-end">
-            <div class="col-md-auto">
-                <label class="form-label small fw-semibold mb-1">Dari Tanggal</label>
-                <input type="date" name="date_from" value="{{ date_from }}" class="form-control form-control-sm">
+<div class="card border-0 mb-4 reveal shadow-sm overflow-hidden">
+    <div class="card-body p-3 p-md-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-6 col-md-auto">
+                <label class="form-label small fw-bold mb-1 text-muted text-uppercase" style="font-size: 0.65rem;">Dari Tanggal</label>
+                <input type="date" name="date_from" value="{{ date_from }}" class="form-control form-control-sm border-light bg-light bg-opacity-50">
             </div>
-            <div class="col-md-auto">
-                <label class="form-label small fw-semibold mb-1">Sampai Tanggal</label>
-                <input type="date" name="date_to" value="{{ date_to }}" class="form-control form-control-sm">
+            <div class="col-6 col-md-auto">
+                <label class="form-label small fw-bold mb-1 text-muted text-uppercase" style="font-size: 0.65rem;">Sampai Tanggal</label>
+                <input type="date" name="date_to" value="{{ date_to }}" class="form-control form-control-sm border-light bg-light bg-opacity-50">
             </div>
-            <div class="col-md-auto d-flex gap-2">
-                <button type="submit" class="btn btn-sm btn-primary">
+            <div class="col-12 col-md-auto d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-dark flex-grow-1 px-4 shadow-sm">
                     <i class="bi bi-funnel me-1"></i>Filter
                 </button>
-                <a href="{% url 'requests_app:dashboard_ga' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+                <a href="{% url 'requests_app:dashboard_ga' %}" class="btn btn-sm btn-outline-secondary px-3">Reset</a>
             </div>
             {% if date_from or date_to %}
-            <div class="col-md-auto">
-                <span class="badge bg-info">
+            <div class="col-12 col-md-auto">
+                <span class="badge bg-primary rounded-pill px-3 py-2 fw-normal">
+                    <i class="bi bi-calendar-check me-1"></i>
                     {% if date_from %}{{ date_from }}{% endif %}
                     {% if date_from and date_to %} - {% endif %}
                     {% if date_to %}{{ date_to }}{% endif %}
@@ -183,45 +191,45 @@
 <!-- Summary Cards -->
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3 reveal">
-        <div class="card border-0 card-stat card-stat-enhanced">
-            <div class="card-body text-center py-4">
-                <div class="stat-icon warning">
+        <div class="card border-0 card-stat card-stat-enhanced h-100 bg-white text-center">
+            <div class="card-body py-4">
+                <div class="stat-icon warning mb-3 mx-auto">
                     <i class="bi bi-hourglass-split"></i>
                 </div>
-                <div class="stat-number" data-count="{{ total_pending }}" data-suffix="">0</div>
+                <div class="stat-number text-dark" data-count="{{ total_pending }}" data-suffix="">0</div>
                 <div class="stat-label">Pending</div>
             </div>
         </div>
     </div>
-    <div class="col-6 col-lg-3 reveal reveal-delay-1">
-        <div class="card border-0 card-stat card-stat-enhanced">
-            <div class="card-body text-center py-4">
-                <div class="stat-icon primary">
+    <div class="col-6 col-lg-3 reveal" style="transition-delay: 0.1s;">
+        <div class="card border-0 card-stat card-stat-enhanced h-100 bg-white text-center">
+            <div class="card-body py-4">
+                <div class="stat-icon primary mb-3 mx-auto">
                     <i class="bi bi-gear-wide-connected"></i>
                 </div>
-                <div class="stat-number" data-count="{{ total_on_progress }}" data-suffix="">0</div>
+                <div class="stat-number text-dark" data-count="{{ total_on_progress }}" data-suffix="">0</div>
                 <div class="stat-label">On Progress</div>
             </div>
         </div>
     </div>
-    <div class="col-6 col-lg-3 reveal reveal-delay-2">
-        <div class="card border-0 card-stat card-stat-enhanced">
-            <div class="card-body text-center py-4">
-                <div class="stat-icon success">
+    <div class="col-6 col-lg-3 reveal" style="transition-delay: 0.2s;">
+        <div class="card border-0 card-stat card-stat-enhanced h-100 bg-white text-center">
+            <div class="card-body py-4">
+                <div class="stat-icon success mb-3 mx-auto">
                     <i class="bi bi-check-circle"></i>
                 </div>
-                <div class="stat-number" data-count="{{ total_completed }}" data-suffix="">0</div>
+                <div class="stat-number text-dark" data-count="{{ total_completed }}" data-suffix="">0</div>
                 <div class="stat-label">Completed</div>
             </div>
         </div>
     </div>
-    <div class="col-6 col-lg-3 reveal reveal-delay-3">
-        <div class="card border-0 card-stat card-stat-enhanced">
-            <div class="card-body text-center py-4">
-                <div class="stat-icon danger">
+    <div class="col-6 col-lg-3 reveal" style="transition-delay: 0.3s;">
+        <div class="card border-0 card-stat card-stat-enhanced h-100 bg-white text-center">
+            <div class="card-body py-4">
+                <div class="stat-icon danger mb-3 mx-auto">
                     <i class="bi bi-x-circle"></i>
                 </div>
-                <div class="stat-number" data-count="{{ total_rejected }}" data-suffix="">0</div>
+                <div class="stat-number text-dark" data-count="{{ total_rejected }}" data-suffix="">0</div>
                 <div class="stat-label">Rejected</div>
             </div>
         </div>
@@ -231,31 +239,33 @@
 <!-- Monthly Chart -->
 <div class="row g-4 mb-4">
     <div class="col-lg-8 reveal">
-        <div class="card border-0">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="bi bi-bar-chart"></i>
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                <h6 class="mb-0 fw-bold">
+                    <i class="bi bi-bar-chart me-2 text-primary"></i>
                     Pengajuan per Bulan
                 </h6>
             </div>
-            <div class="card-body chart-card">
-                <canvas id="monthlyChart" height="260"></canvas>
+            <div class="card-body chart-card px-4 pb-4">
+                <canvas id="monthlyChart" height="280"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 reveal reveal-delay-1">
-        <div class="card border-0 h-100">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="bi bi-pie-chart"></i>
-                    Ringkasan
+    <div class="col-lg-4 reveal" style="transition-delay: 0.1s;">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden text-center">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                <h6 class="mb-0 fw-bold text-start">
+                    <i class="bi bi-pie-chart me-2 text-primary"></i>
+                    Status Keseluruhan
                 </h6>
             </div>
-            <div class="card-body d-flex flex-column justify-content-center">
-                <canvas id="doughnutChart" height="220"></canvas>
+            <div class="card-body d-flex flex-column justify-content-center p-4">
+                <div style="height: 200px;">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
                 <div class="text-center mt-4">
-                    <span class="stat-number" data-count="{{ total_all }}" data-suffix="">0</span>
-                    <span class="stat-label d-block">Total Pengajuan</span>
+                    <div class="h2 fw-bold text-dark mb-0" data-count="{{ total_all }}" data-suffix="">0</div>
+                    <span class="stat-label d-block mt-1">Total Pengajuan</span>
                 </div>
             </div>
         </div>
@@ -263,208 +273,178 @@
 </div>
 
 <!-- Recent Requests -->
-<div class="card border-0 reveal">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0">
-            <i class="bi bi-clock"></i>
-            Pengajuan Terbaru
+<div class="card border-0 reveal shadow-sm overflow-hidden">
+    <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 py-3 px-4">
+        <h6 class="mb-0 fw-bold">
+            <i class="bi bi-clock-history me-2 text-primary"></i>Pengajuan Terbaru
         </h6>
-        <a href="{% url 'requests_app:request_list' %}" class="btn btn-sm btn-outline-primary">
+        <a href="{% url 'requests_app:request_list' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
             Lihat Semua
             <i class="bi bi-arrow-right ms-1"></i>
         </a>
     </div>
-    <div class="table-responsive">
+
+    <!-- Desktop View (Table) -->
+    <div class="table-responsive d-none d-md-block">
         <table class="table table-hover mb-0 align-middle">
-            <thead>
+            <thead class="table-light">
                 <tr>
-                    <th>#</th>
+                    <th class="ps-4">#</th>
                     <th>Pengaju</th>
                     <th>Kategori</th>
                     <th>Lokasi</th>
                     <th>Status</th>
                     <th>Tanggal</th>
-                    <th></th>
+                    <th class="pe-4 text-end">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 {% for req in recent_requests %}
                 <tr>
-                    <td class="fw-semibold">#{{ req.pk }}</td>
+                    <td class="ps-4 fw-bold text-primary">#{{ req.pk }}</td>
                     <td>
                         <div class="d-flex align-items-center">
-                            <div class="avatar-initial rounded-circle bg-light-success text-success me-2 fw-bold"
-                                style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">
-                                {{ req.requester.first_name|first }}{{ req.requester.last_name|first }}
+                            <div class="avatar-initial rounded-circle me-2 fw-bold"
+                                style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;background:rgba(6,182,212,0.1);color:var(--accent-dark);">
+                                {{ req.requester.first_name|first|default:req.requester.username|first|upper }}{{ req.requester.last_name|first|upper }}
                             </div>
                             <div>
-                                <div class="small fw-semibold">{{ req.requester.get_full_name|default:req.requester.username }}</div>
-                                <div class="small text-muted">{{ req.requester.get_role_display }}</div>
+                                <div class="small fw-bold text-dark">{{ req.requester.get_full_name|default:req.requester.username }}</div>
+                                <div class="small text-muted" style="font-size: 0.7rem;">{{ req.requester.get_role_display }}</div>
                             </div>
                         </div>
                     </td>
-                    <td>{{ req.get_category_display }}</td>
-                    <td>{{ req.location }}</td>
+                    <td class="small">{{ req.get_category_display }}</td>
+                    <td class="small text-secondary">{{ req.location }}</td>
                     <td>
-                        <span
-                            class="badge {% if req.status == 'completed' %}bg-success{% elif req.status == 'rejected' %}bg-danger{% elif req.status == 'on_progress' %}bg-primary{% elif req.status == 'verified' %}bg-info{% else %}bg-warning{% endif %}">
+                        <span class="badge {% if req.status == 'completed' %}bg-success{% elif req.status == 'rejected' %}bg-danger{% elif req.status == 'on_progress' %}bg-primary{% elif req.status == 'verified' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %} rounded-pill">
                             {{ req.get_status_display }}
                         </span>
                     </td>
                     <td class="small text-muted">{{ req.created_at|date:"d/m/Y H:i" }}</td>
-                    <td>
+                    <td class="pe-4 text-end">
                         <a href="{% url 'requests_app:request_detail' req.pk %}"
-                            class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-eye"></i>
+                            class="btn btn-sm btn-light border shadow-none">
+                            <i class="bi bi-chevron-right"></i>
                         </a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" class="text-center text-muted py-4">
-                        <div class="py-3">
-                            <i class="bi bi-inbox fs-1 d-block text-muted mb-2"></i>
-                            <span>Belum ada pengajuan.</span>
-                        </div>
+                    <td colspan="7" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 opacity-25"></i>
+                        Belum ada pengajuan.
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <!-- Mobile View (Cards) -->
+    <div class="card-body p-3 d-md-none bg-light bg-opacity-30">
+        {% for req in recent_requests %}
+        <div class="mobile-card shadow-sm border-0 mb-3 bg-white" onclick="window.location='{% url 'requests_app:request_detail' req.pk %}'">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-bold text-primary">#{{ req.pk }}</span>
+                <span class="badge {% if req.status == 'completed' %}bg-success{% elif req.status == 'rejected' %}bg-danger{% elif req.status == 'on_progress' %}bg-primary{% elif req.status == 'verified' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %} rounded-pill">
+                    {{ req.get_status_display }}
+                </span>
+            </div>
+            <div class="small fw-bold text-dark mb-3">
+                <i class="bi bi-person me-1 text-muted"></i>
+                {{ req.requester.get_full_name|default:req.requester.username }}
+            </div>
+            <div class="row g-2">
+                <div class="col-6">
+                    <div class="card-label">Kategori</div>
+                    <div class="card-value mb-0">{{ req.get_category_display }}</div>
+                </div>
+                <div class="col-6">
+                    <div class="card-label">Waktu</div>
+                    <div class="card-value mb-0 text-muted">{{ req.created_at|date:"d/m H:i" }}</div>
+                </div>
+            </div>
+            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+                <span class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>{{ req.location|truncatechars:20 }}</span>
+                <i class="bi bi-chevron-right text-primary"></i>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-muted py-5">
+            <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+            Belum ada pengajuan.
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
-    // ── Color variables ───────────────────────────────────────
-    const accentColor = '#4ADE80';
-    const accentColorAlpha = 'rgba(74, 222, 128, 0.7)';
-    const accentColorBorder = '#22C55E';
-    const gridColor = '#E5E7EB';
-    const textColor = '#6B7280';
+    const accentColor = '#06B6D4';
+    const accentColorAlpha = 'rgba(6, 182, 212, 0.7)';
+    const accentColorBorder = '#0891B2';
+    const gridColor = '#F1F5F9';
+    const textColor = '#94A3B8';
 
-    // ── Reveal animations (Intersection Observer) ───────────────
-    const revealElements = document.querySelectorAll('.reveal');
-    if (revealElements.length) {
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.dataset.count, 10);
+                const duration = 2000;
+                const start = performance.now();
+                function step(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    el.textContent = Math.floor(ease * target);
+                    if (progress < 1) requestAnimationFrame(step);
                 }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+                requestAnimationFrame(step);
+                counterObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
-        revealElements.forEach(el => revealObserver.observe(el));
-    }
-
-    // ── Counter animation ───────────────────────────────────────
-    const counters = document.querySelectorAll('[data-count]');
-    if (counters.length) {
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                    counterObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        counters.forEach(el => counterObserver.observe(el));
-    }
-
-    function animateCounter(el) {
-        const target = parseInt(el.dataset.count, 10);
-        const suffix = el.dataset.suffix || '';
-        const duration = 1500;
-        const start = performance.now();
-
-        function step(now) {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            // Ease out cubic
-            const ease = 1 - Math.pow(1 - progress, 3);
-            const current = Math.floor(ease * target);
-            el.textContent = current + suffix;
-            if (progress < 1) requestAnimationFrame(step);
-        }
-
-        requestAnimationFrame(step);
-    }
-
-    // ── Wait for Chart.js to load ────────────────────────────────
-    function initCharts() {
-        if (typeof Chart === 'undefined') {
-            setTimeout(initCharts, 100);
-            return;
-        }
-
-        // ── Monthly bar chart ───────────────────────────────────────
+    window.addEventListener('load', () => {
+        if (typeof Chart === 'undefined') return;
         const ctx1 = document.getElementById('monthlyChart');
         if (ctx1) {
             new Chart(ctx1.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: {{ monthly_labels| safe }},
+                    labels: {{ monthly_labels|safe }},
                     datasets: [{
-                        label: 'Jumlah Pengajuan',
-                        data: {{ monthly_data| safe }},
+                        data: {{ monthly_data|safe }},
                         backgroundColor: accentColorAlpha,
-                        borderColor: accentColorBorder,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderSkipped: false,
-                        hoverBackgroundColor: accentColor,
-                        hoverBorderColor: accentColorBorder
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: {
-                        duration: 1200,
-                        easing: 'easeOutQuart'
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0B0F14',
-                            titleFont: { family: 'Inter', size: 13 },
-                            bodyFont: { family: 'Inter', size: 12 },
-                            padding: 12,
-                            cornerRadius: 10,
-                            displayColors: false
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                color: textColor,
-                                font: { family: 'Inter', size: 11 }
-                            },
-                            grid: {
-                                color: gridColor,
-                                drawBorder: false
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: textColor,
-                                font: { family: 'Inter', size: 11 }
-                            },
-                            grid: { display: false }
-                        }
+                        y: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor, drawBorder: false } },
+                        x: { ticks: { color: textColor, font: { size: 11 } }, grid: { display: false } }
                     }
                 }
             });
         }
-
-        // ── Doughnut chart ───────────────────────────────────────────
         const ctx2 = document.getElementById('doughnutChart');
         if (ctx2) {
             new Chart(ctx2.getContext('2d'), {
@@ -473,51 +453,18 @@
                     labels: ['Pending', 'On Progress', 'Completed', 'Rejected'],
                     datasets: [{
                         data: [{{ total_pending }}, {{ total_on_progress }}, {{ total_completed }}, {{ total_rejected }}],
-                        backgroundColor: ['#FBBF24', '#4ADE80', '#22C55E', '#EF4444'],
-                        borderWidth: 0,
-                        spacing: 2,
-                        hoverOffset: 8
+                        backgroundColor: ['#FBBF24', '#06B6D4', '#10B981', '#EF4444'],
+                        borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: {
-                        animateRotate: true,
-                        animateScale: true,
-                        duration: 1200,
-                        easing: 'easeOutQuart'
-                    },
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 16,
-                                usePointStyle: true,
-                                pointStyleWidth: 10,
-                                font: { family: 'Inter', size: 12 },
-                                color: textColor
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#0B0F14',
-                            titleFont: { family: 'Inter', size: 13 },
-                            bodyFont: { family: 'Inter', size: 12 },
-                            padding: 12,
-                            cornerRadius: 10
-                        }
-                    }
+                    cutout: '75%',
+                    plugins: { legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, color: '#64748B' } } }
                 }
             });
         }
-    }
-
-    // Start chart initialization
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCharts);
-    } else {
-        initCharts();
-    }
+    });
 </script>
 {% endblock %}
