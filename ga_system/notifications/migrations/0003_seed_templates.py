@@ -63,7 +63,7 @@ TEMPLATES = [
         "code": "manager_fyi",
         "template_text": (
             "📢 *Info Manager*\n"
-            "Pengajuan #{request_id} ({kategori}) dari {nama}\n"
+            "Pengajuan ({kategori}) dari {nama}\n"
             "Status berubah menjadi: {status}\n"
             "Lokasi: {lokasi}\n"
             "Tanggal: {tanggal}"

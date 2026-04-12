@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 
 from notifications.models import MessageTemplate
 from users.models import User
@@ -96,7 +96,7 @@ class ServiceRequestModelTest(TestCase):
         self.assertIn("Pending", str(sr))
 
 
-class SignalNotificationTest(TestCase):
+class SignalNotificationTest(TransactionTestCase):
     """Test that signals fire notifications on all status changes."""
 
     def setUp(self):
@@ -127,13 +127,15 @@ class SignalNotificationTest(TestCase):
             "request_rejected",
             "manager_fyi",
         ]:
-            MessageTemplate.objects.create(
+            MessageTemplate.objects.update_or_create(
                 code=code,
-                template_text=f"Template {code}: {{nama}} {{kategori}} {{status}}",
-                is_active=True,
+                defaults={
+                    "template_text": f"Template {code}: {{nama}} {{kategori}} {{status}}",
+                    "is_active": True,
+                }
             )
 
-    @patch("notifications.services.send_whatsapp")
+    @patch("notifications.services.send_whatsapp_notification")
     def test_signal_fires_on_verified(self, mock_send):
         """Signal should trigger notification when status changes to verified."""
         mock_send.return_value = {"success": True}
@@ -154,7 +156,7 @@ class SignalNotificationTest(TestCase):
         call_count = mock_send.call_count
         self.assertGreaterEqual(call_count, 1)
 
-    @patch("notifications.services.send_whatsapp")
+    @patch("notifications.services.send_whatsapp_notification")
     def test_signal_fires_on_on_progress(self, mock_send):
         """Signal should trigger notification when status changes to on_progress."""
         mock_send.return_value = {"success": True}

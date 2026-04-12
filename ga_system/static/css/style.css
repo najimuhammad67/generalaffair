@@ -65,7 +65,7 @@ a:hover {
 .navbar-ga {
     background: var(--dark) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 12px 0;
+    padding: 6px 0;
     transition: var(--transition);
 }
 
@@ -78,31 +78,31 @@ a:hover {
 }
 
 .navbar-ga .navbar-brand {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     letter-spacing: -0.5px;
     font-weight: 700;
     color: #fff !important;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .navbar-ga .logo-icon {
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
     background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .navbar-ga .nav-link {
     color: rgba(255, 255, 255, 0.65) !important;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    padding: 8px 16px !important;
+    padding: 6px 12px !important;
     border-radius: 8px;
     transition: var(--transition);
 }

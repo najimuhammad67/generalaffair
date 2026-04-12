@@ -1,16 +1,27 @@
 """Forms for service requests."""
 
 from django import forms
+from django.contrib.auth import get_user_model
 
 from .models import ServiceRequest
+
+User = get_user_model()
 
 
 class ServiceRequestForm(forms.ModelForm):
     """Form for creating a new service request (employee-facing)."""
 
+    requester_name = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+        label='Nama Pemohon (Opsional)',
+        help_text='Pilih nama karyawan jika Anda membuatkan atas nama mereka.',
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
+
     class Meta:
         model = ServiceRequest
-        fields = ['category', 'description', 'location', 'urgency', 'attachment']
+        fields = ['requester_name', 'category', 'description', 'location', 'urgency', 'attachment']
         widgets = {
             'category': forms.Select(attrs={'class': 'form-select'}),
             'description': forms.Textarea(attrs={

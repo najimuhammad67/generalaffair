@@ -62,7 +62,7 @@ class ServiceRequest(models.Model):
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
 
     class Meta:
-        ordering = ['created_at']  # FIFO - oldest requests first for processing
+        ordering = ['-created_at']  # Newest requests first
         verbose_name = 'Service Request'
         verbose_name_plural = 'Service Requests'
 

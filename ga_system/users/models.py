@@ -11,14 +11,14 @@ class User(AbstractUser):
     """Extended user with role and phone number for WhatsApp integration."""
 
     class Role(models.TextChoices):
-        EMPLOYEE = 'employee', 'Employee'
+        ADMIN = 'admin', 'Admin'
         GA = 'ga', 'General Affair'
-        MANAGER = 'manager', 'Manager'
+        KARYAWAN = 'karyawan', 'Karyawan'
 
     role = models.CharField(
         max_length=20,
         choices=Role.choices,
-        default=Role.EMPLOYEE,
+        default=Role.KARYAWAN,
         db_index=True,
     )
     phone = models.CharField(
@@ -33,14 +33,20 @@ class User(AbstractUser):
     def __str__(self):
         return f'{self.get_full_name() or self.username} ({self.get_role_display()})'
 
-    @property
-    def is_employee(self):
-        return self.role == self.Role.EMPLOYEE
+    def save(self, *args, **kwargs):
+        # Force superusers to have the 'admin' role
+        if self.is_superuser:
+            self.role = self.Role.ADMIN
+        super().save(*args, **kwargs)
 
     @property
     def is_ga(self):
         return self.role == self.Role.GA
 
     @property
-    def is_manager(self):
-        return self.role == self.Role.MANAGER
+    def is_karyawan(self):
+        return self.role == self.Role.KARYAWAN
+
+    @property
+    def is_admin_role(self):
+        return self.role == self.Role.ADMIN or self.is_superuser

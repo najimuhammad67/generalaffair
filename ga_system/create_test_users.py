@@ -35,25 +35,6 @@ if created:
 else:
     print(f"ℹ️  User GA sudah ada: username='ga'")
 
-# User Manager
-manager_user, created = User.objects.get_or_create(
-    username='manager',
-    defaults={
-        'first_name': 'Manager',
-        'last_name': 'Utama',
-        'email': 'manager@gasystem.com',
-        'role': 'manager',
-        'phone': '6281234567802',
-        'is_active': True
-    }
-)
-if created:
-    manager_user.set_password('Man123456!')
-    manager_user.save()
-    print(f"✅ User Manager dibuat: username='manager', password='Man123456!'")
-else:
-    print(f"ℹ️  User Manager sudah ada: username='manager'")
-
 # User Employee
 employee_user, created = User.objects.get_or_create(
     username='employee',

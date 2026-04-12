@@ -13,22 +13,22 @@ from .models import NotificationLog
 
 
 class NotificationLogListView(RoleRequiredMixin, ListView):
-    """Paginated list of all WhatsApp notification logs (GA/Manager only)."""
+    """Paginated list of all WhatsApp notification logs (GA only)."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["ga"]
     model = NotificationLog
     template_name = "notifications/log_list.html"
     context_object_name = "logs"
     paginate_by = 20
 
     def get_queryset(self):
-        return super().get_queryset().select_related("service_request", "recipient")
+        return super().get_queryset().select_related("service_request", "recipient").order_by("-created_at")
 
 
 class WhatsAppDashboardView(RoleRequiredMixin, TemplateView):
     """Dashboard for monitoring WhatsApp service connection and QR pairing."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["ga"]
     template_name = "notifications/wa_dashboard.html"
 
     def _wa_service_url(self, endpoint: str) -> str:

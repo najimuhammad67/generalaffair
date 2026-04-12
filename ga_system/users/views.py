@@ -40,7 +40,7 @@ class DashboardRedirectView(LoginRequiredMixin, View):
 
     def get(self, request):
         role = request.user.role
-        if role in ("ga", "manager"):
+        if role in ("ga", "admin"):
             return redirect("requests_app:dashboard_ga")
         return redirect("requests_app:dashboard_employee")
 
@@ -82,14 +82,14 @@ class ChangePasswordView(LoginRequiredMixin, View):
 
 
 # -------------------------------------------------------------------
-# User Management (GA / Manager only)
+# User Management (Admin only)
 # -------------------------------------------------------------------
 
 
 class UserListView(RoleRequiredMixin, ListView):
     """List all users with search and role filter."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["admin", "ga"]
     model = User
     template_name = "users/user_list.html"
     context_object_name = "users_list"
@@ -124,9 +124,9 @@ class UserListView(RoleRequiredMixin, ListView):
 
 
 class UserCreateView(RoleRequiredMixin, CreateView):
-    """Create a new user (GA / Manager only)."""
+    """Create a new user (GA only)."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["admin", "ga"]
     model = User
     form_class = UserCreateForm
     template_name = "users/user_form.html"
@@ -139,9 +139,9 @@ class UserCreateView(RoleRequiredMixin, CreateView):
 
 
 class UserUpdateView(RoleRequiredMixin, UpdateView):
-    """Edit an existing user (GA / Manager only)."""
+    """Edit an existing user (GA only)."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["admin", "ga"]
     model = User
     template_name = "users/user_form.html"
     success_url = reverse_lazy("users:user_list")
@@ -180,7 +180,7 @@ class UserUpdateView(RoleRequiredMixin, UpdateView):
 class AdminResetPasswordView(RoleRequiredMixin, View):
     """Admin resets a user's password (no old password needed)."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["admin", "ga"]
 
     def get(self, request, pk):
         target_user = get_object_or_404(User, pk=pk)
@@ -215,9 +215,9 @@ class AdminResetPasswordView(RoleRequiredMixin, View):
 
 
 class UserDeleteView(RoleRequiredMixin, View):
-    """Delete a user (GA / Manager only). Cannot delete self."""
+    """Delete a user (GA only). Cannot delete self."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["admin", "ga"]
 
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)

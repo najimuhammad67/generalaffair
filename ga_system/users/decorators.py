@@ -1,7 +1,7 @@
 """
 Decorator for role-based access control.
 Usage:
-    @role_required('ga', 'manager')
+    @role_required('ga')
     def my_view(request): ...
 """
 

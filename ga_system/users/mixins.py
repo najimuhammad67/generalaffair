@@ -17,7 +17,7 @@ class RoleRequiredMixin(LoginRequiredMixin):
     Usage::
 
         class MyView(RoleRequiredMixin, TemplateView):
-            allowed_roles = ['ga', 'manager']
+            allowed_roles = ['ga']
     """
 
     allowed_roles: list[str] = []

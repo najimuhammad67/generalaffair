@@ -34,14 +34,23 @@ class RequestListView(LoginRequiredMixin, ListView):
         qs = super().get_queryset().select_related("requester")
         user = self.request.user
 
-        # Employees see only their own requests
-        if user.role == "employee":
+        # Karyawan see only their own requests
+        if user.role == "karyawan":
             qs = qs.filter(requester=user)
 
+        # View Type: Active vs History
+        view_type = self.request.GET.get("view_type", "active")
+        
         # Filters
         status = self.request.GET.get("status")
         if status:
             qs = qs.filter(status=status)
+        elif view_type == "history":
+            # History: Show only completed and rejected
+            qs = qs.filter(status__in=[ServiceRequest.Status.COMPLETED, ServiceRequest.Status.REJECTED])
+        else:
+            # DEFAULT (active): Show only active requests
+            qs = qs.exclude(status__in=[ServiceRequest.Status.COMPLETED, ServiceRequest.Status.REJECTED])
 
         category = self.request.GET.get("category")
         if category:
@@ -60,22 +69,26 @@ class RequestListView(LoginRequiredMixin, ListView):
         ctx["status_choices"] = ServiceRequest.Status.choices
         ctx["category_choices"] = ServiceRequest.Category.choices
         ctx["current_status"] = self.request.GET.get("status", "")
+        ctx["current_view_type"] = self.request.GET.get("view_type", "active")
         ctx["current_category"] = self.request.GET.get("category", "")
         ctx["current_q"] = self.request.GET.get("q", "")
         return ctx
 
 
 class RequestCreateView(RoleRequiredMixin, CreateView):
-    """Create a new service request. Only employees can create requests."""
+    """Create a new service request. Karyawan, GA, and Admin can create requests."""
 
-    allowed_roles = ["employee"]
+    allowed_roles = ["karyawan", "ga", "admin"]
     model = ServiceRequest
     form_class = ServiceRequestForm
     template_name = "requests_app/request_form.html"
 
     def form_valid(self, form):
+        # If requester_name is selected (by GA/Admin), use it. Otherwise use self.request.user.
+        requester = form.cleaned_data.get("requester_name") or self.request.user
+
         sr = create_request(
-            user=self.request.user,
+            user=requester,
             category=form.cleaned_data["category"],
             description=form.cleaned_data["description"],
             location=form.cleaned_data["location"],
@@ -85,9 +98,23 @@ class RequestCreateView(RoleRequiredMixin, CreateView):
         messages.success(self.request, f"Pengajuan #{sr.pk} berhasil dibuat.")
         return redirect("requests_app:request_detail", pk=sr.pk)
 
+    def get_initial(self):
+        initial = super().get_initial()
+        # Pre-select self as requester for GA/Admin if not on behalf of others
+        if self.request.user.role in ("ga", "admin"):
+            initial['requester_name'] = self.request.user
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Only show requester_name field to GA/Admin
+        if self.request.user.role == "karyawan":
+            del form.fields['requester_name']
+        return form
+
 
 class RequestDetailView(LoginRequiredMixin, DetailView):
-    """Request detail with status timeline and update form (for GA/manager)."""
+    """Request detail with status timeline and update form (for GA/admin)."""
 
     model = ServiceRequest
     template_name = "requests_app/request_detail.html"
@@ -97,7 +124,7 @@ class RequestDetailView(LoginRequiredMixin, DetailView):
         qs = super().get_queryset().select_related("requester")
         user = self.request.user
         # Employees can only view their own requests
-        if user.role == "employee":
+        if user.role == "karyawan":
             qs = qs.filter(requester=user)
         return qs
 
@@ -106,7 +133,7 @@ class RequestDetailView(LoginRequiredMixin, DetailView):
         ctx["logs"] = self.object.logs.select_related("updated_by").order_by(
             "-created_at"
         )
-        if self.request.user.role in ("ga", "manager"):
+        if self.request.user.role in ("ga", "admin"):
             ctx["status_form"] = StatusUpdateForm()
         return ctx
 
@@ -114,7 +141,7 @@ class RequestDetailView(LoginRequiredMixin, DetailView):
 class RequestUpdateStatusView(RoleRequiredMixin, View):
     """Handle status update form submission (GA / Manager only)."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["ga", "admin"]
 
     def post(self, request, pk):
         sr = get_object_or_404(ServiceRequest, pk=pk)
@@ -142,7 +169,7 @@ class RequestUpdateStatusView(RoleRequiredMixin, View):
 class RequestDeleteView(RoleRequiredMixin, View):
     """Delete a service request (GA / Manager only)."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["ga", "admin"]
 
     def post(self, request, pk):
         sr = get_object_or_404(ServiceRequest, pk=pk)
@@ -158,9 +185,9 @@ class RequestDeleteView(RoleRequiredMixin, View):
 
 
 class EmployeeDashboardView(RoleRequiredMixin, TemplateView):
-    """Dashboard for employees showing their own request stats."""
+    """Dashboard for karyawan showing their own request stats."""
 
-    allowed_roles = ["employee"]
+    allowed_roles = ["karyawan"]
     template_name = "requests_app/dashboard_employee.html"
 
     def get_context_data(self, **kwargs):
@@ -170,7 +197,7 @@ class EmployeeDashboardView(RoleRequiredMixin, TemplateView):
         date_from = self.request.GET.get('date_from')
         date_to = self.request.GET.get('date_to')
 
-        # Base queryset for employee's requests
+        # Base queryset for karyawan's requests
         user_requests = ServiceRequest.objects.filter(requester=self.request.user)
 
         # Apply date range filter if provided
@@ -203,7 +230,9 @@ class EmployeeDashboardView(RoleRequiredMixin, TemplateView):
         )
 
         ctx["total_requests"] = counts["total"]
-        ctx["recent_requests"] = user_requests[:5]
+        ctx["recent_requests"] = user_requests.exclude(
+            status__in=[ServiceRequest.Status.COMPLETED, ServiceRequest.Status.REJECTED]
+        )[:5]
         ctx["status_counts"] = {
             "pending": counts["pending"],
             "verified": counts["verified"],
@@ -219,7 +248,7 @@ class EmployeeDashboardView(RoleRequiredMixin, TemplateView):
 class GADashboardView(RoleRequiredMixin, TemplateView):
     """Dashboard for GA/Manager with aggregate stats and monthly chart data."""
 
-    allowed_roles = ["ga", "manager"]
+    allowed_roles = ["ga", "admin"]
     template_name = "requests_app/dashboard_ga.html"
 
     def get_context_data(self, **kwargs):
@@ -260,9 +289,13 @@ class GADashboardView(RoleRequiredMixin, TemplateView):
             total_rejected=Count("id", filter=Q(status="rejected")),
         )
         ctx.update(counts)
-        ctx["recent_requests"] = requests_qs.select_related(
-            "requester"
-        ).order_by("-created_at")[:5]
+        ctx["recent_requests"] = (
+            requests_qs.exclude(
+                status__in=[ServiceRequest.Status.COMPLETED, ServiceRequest.Status.REJECTED]
+            )
+            .select_related("requester")
+            .order_by("-created_at")[:5]
+        )
 
         # Optimized monthly data using single query with annotation
         # Use the same filtered queryset for consistency

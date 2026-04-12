@@ -14,7 +14,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="django-insecure-dev-key-change-me")
 DEBUG = config("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1,0.0.0.0", cast=Csv())
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://0.0.0.0:8000",
+]
+CSRF_COOKIE_HTTPONLY = False  # Memungkinkan akses token jika diperlukan oleh JS
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # -------------------------------------------------------------------
 # Applications
@@ -124,7 +132,8 @@ USE_TZ = True
 # Static & Media files
 # -------------------------------------------------------------------
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # <-- Tambahkan ini
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
